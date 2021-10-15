@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
     Button translateBtn;
     Button nextBtn;
     private final String LOG_TAG = this.getClass().getSimpleName();
-
+    static final List<String> ENG_WORDS = new ArrayList<>(WordsHolder.WORDS.keySet());
+    Random random = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,29 +29,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.engView = findViewById(R.id.tv_engView);
-        engView.setText("Cat");
+        this.engView.setText(getRandomEngWord());
         this.rusView = findViewById(R.id.tv_rusView);
-        rusView.setText("Кот");
         this.translateBtn = findViewById(R.id.b_translate);
         this.nextBtn = findViewById(R.id.b_next);
 
-        OnClickListener translateBtnClick = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rusView.setText("Здесь будет перевод слова \"" + engView.getText() + "\"");
-                Log.d(LOG_TAG, "Выполнен перевод слова " + engView.getText());
-            }
+        OnClickListener translateBtnClick = v -> {
+            String engWord = engView.getText().toString();
+            rusView.setText(WordsHolder.WORDS.get(engWord));
+            Log.d(LOG_TAG, "Выполнен перевод слова " + engWord);
         };
 
-        OnClickListener nextBtnClicl = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!rusView.getText().equals("Cleaned")) {
-                    rusView.setText("Cleaned");
-                } else {
-                    showToast("Already cleaned!");
-                }
-            }
+        OnClickListener nextBtnClicl = v -> {
+            this.engView.setText(getRandomEngWord());
+            this.rusView.setText("");
+
         };
 
         translateBtn.setOnClickListener(translateBtnClick);
@@ -56,5 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void showToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+    }
+
+    private String getRandomEngWord(){
+        return ENG_WORDS.get(this.random.nextInt(ENG_WORDS.size()));
     }
 }
