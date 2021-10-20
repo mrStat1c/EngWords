@@ -2,6 +2,7 @@ package com.example.englishwordslearning;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -29,6 +30,7 @@ public class Dictionary {
     private static final List<String> ENG_WORDS = new ArrayList<>();
     private static int dictionarySize = 0;
     private static Random random = new Random();
+    private static final String LOG_TAG = Dictionary.class.getSimpleName();
 
     public static void init(Context context) {
         Resources r = context.getResources();
@@ -41,16 +43,26 @@ public class Dictionary {
         }
 
         XSSFSheet sheet = workbook.getSheetAt(0);
-        Iterator<Row> rowIterator = sheet.iterator();
 
-        while (rowIterator.hasNext()) {
-            Row row = rowIterator.next();
-            String cell_1 = row.getCell(0).getStringCellValue();
-            String cell_2 = row.getCell(1).getStringCellValue();
+        for (Row row : sheet) {
+            String cell1;
+            String cell2;
 
-            //todo добавить проверку ячеек на null
-            WORDS.put(cell_1, cell_2);
-            ENG_WORDS.add(cell_1);
+            if (row.getCell(0) == null || row.getCell(1) == null) {
+                Log.e(LOG_TAG, "Sheet contains NULL cell(s)!");
+                continue;
+            } else {
+                cell1 = row.getCell(0).getStringCellValue();
+                cell2 = row.getCell(1).getStringCellValue();
+            }
+
+            if (WORDS.containsKey(cell1)) {
+                Log.e(LOG_TAG, "The word \"" + cell1 + "\" is dublicated!");
+                continue;
+            }
+
+            WORDS.put(cell1, cell2);
+            ENG_WORDS.add(cell1);
             dictionarySize = ENG_WORDS.size();
         }
     }

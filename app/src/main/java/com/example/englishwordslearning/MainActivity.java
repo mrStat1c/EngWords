@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
         OnClickListener translateBtnClick = v -> {
             String engWord = engTextView.getText().toString();
             rusTextView.setText(Dictionary.getTranslation(engWord));
-            Log.d(LOG_TAG, "Выполнен перевод слова " + engWord);
+            Log.d(LOG_TAG, "Выполнен перевод слова " + engWord);//нужно ли?
         };
 
         OnClickListener nextBtnClicl = v -> {
