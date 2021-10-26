@@ -52,7 +52,7 @@ public class Dictionary {
                 Log.e(LOG_TAG, "Sheet contains NULL cell(s)!");
                 continue;
             } else {
-                cell1 = row.getCell(0).getStringCellValue();
+                cell1 = row.getCell(0).getStringCellValue().trim();
                 cell2 = row.getCell(1).getStringCellValue();
             }
 
