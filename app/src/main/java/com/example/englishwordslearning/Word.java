@@ -1,22 +1,35 @@
 package com.example.englishwordslearning;
 
+import java.time.LocalDateTime;
+
 public class Word {
 
     private String eng;
     private String rus;
     private String transcription;
+
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
+    }
+
+    private boolean needUpdate;
     private String tags;
     private String zone;
-    private String lastShow;
+    private LocalDateTime lastShow;
 
-    public Word(String eng, String rus, String transcription, String tags) {
+    public Word(String eng, String rus, String transcription, boolean needUpdate, String tags) {
         this.eng = eng;
         this.rus = rus;
         this.transcription = transcription;
+        this.needUpdate = needUpdate;
         this.tags = tags;
     }
 
-    public Word(String eng, String rus, String transcription, String tags, String zone, String lastShow) {
+    public Word(String eng, String rus, String transcription, String tags, String zone, LocalDateTime lastShow) {
         this.eng = eng;
         this.rus = rus;
         this.transcription = transcription;
@@ -65,11 +78,11 @@ public class Word {
         this.zone = zone;
     }
 
-    public String getLastShow() {
+    public LocalDateTime getLastShow() {
         return lastShow;
     }
 
-    public void setLastShow(String lastShow) {
+    public void setLastShow(LocalDateTime lastShow) {
         this.lastShow = lastShow;
     }
 }

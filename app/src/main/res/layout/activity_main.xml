@@ -39,34 +39,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <Button
         android:id="@+id/green_btn"
-        android:src="@drawable/green_btn"
-        android:layout_width="93dp"
-        android:layout_height="93dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="18dp"
-        app:layout_constraintEnd_toStartOf="@+id/yellow_btn"
-        app:layout_constraintTop_toBottomOf="@+id/tv_rusView" />
-
-    <ImageView
-        android:id="@+id/yellow_btn"
-        android:src="@drawable/yellow_btn"
-        android:layout_width="93dp"
-        android:layout_height="93dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="240dp"
+        android:layout_height="65dp"
+        android:backgroundTint="#27AA43"
+        android:text="знаю"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/yellow_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_rusView" />
 
-    <ImageView
+    <Button
+        android:id="@+id/yellow_btn"
+        android:layout_width="240dp"
+        android:layout_height="65dp"
+        android:backgroundTint="#F3F325"
+        android:src="@drawable/bbb"
+        android:text="нужно повторить"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/red_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/green_btn" />
+
+    <Button
         android:id="@+id/red_btn"
-        android:src="@drawable/red_btn"
-        android:layout_width="93dp"
-        android:layout_height="93dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toEndOf="@+id/yellow_btn"
-        app:layout_constraintTop_toBottomOf="@+id/tv_rusView" />
+        android:layout_width="240dp"
+        android:layout_height="65dp"
+        android:backgroundTint="#A61515"
+        android:src="@drawable/bbb"
+        android:text="не знаю"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/yellow_btn" />
+
+    <Button
+        android:id="@+id/info_btn"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:background="@drawable/info5"
+        app:layout_constraintBottom_toTopOf="@+id/tv_engView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_engView"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
