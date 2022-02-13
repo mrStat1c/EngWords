@@ -20,13 +20,19 @@ import static java.time.LocalDateTime.now;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
+    private static DbHelper dbHelper;
+
+    public static DbHelper getInstance(Context context){
+       return dbHelper == null ? new DbHelper(context) : dbHelper;
+    }
+
     private static int DB_VERSION = 2;
-    private String LOG_TAG = this.getClass().getSimpleName();
+    private static String LOG_TAG = DbHelper.class.getSimpleName();
     private SQLiteDatabase db;
 
-    public DbHelper(Context context) {
+    private DbHelper(Context context) {
         super(context, "myDb", null, DB_VERSION);
-        this.db = getWritableDatabase();
+        db = getWritableDatabase();
     }
 
     public SQLiteDatabase getDb() {

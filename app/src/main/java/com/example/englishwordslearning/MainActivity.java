@@ -16,6 +16,7 @@ import static com.example.englishwordslearning.Constants.YELLOW;
  */
 public class MainActivity extends Activity {
 
+    private boolean isInit = false;
     private TextView engTextView;
     private TextView rusTextView;
     private Button greenBtn;
@@ -34,7 +35,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.dbHelper = new DbHelper(this);
+        this.dbHelper = DbHelper.getInstance(this);
+
         Dictionary.init(this, this.dbHelper);
 
         this.engTextView = findViewById(R.id.tv_engView);

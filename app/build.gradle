@@ -30,11 +30,11 @@ android {
     android.applicationVariants.all { variant ->
         variant.outputs.all {
             outputFileName = "simple-english-" + versionName;
-            if (variant.buildType.name == "release") {
+//            if (variant.buildType.name == "release") {
                 outputFileName += ".apk";
-            } else {
-                outputFileName += "-SNAPSHOT.apk";
-            }
+//            } else {
+//                outputFileName += "-SNAPSHOT.apk";
+//            }
         }
     }
 

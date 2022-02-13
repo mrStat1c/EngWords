@@ -57,6 +57,9 @@ public class Dictionary {
      */
     public static void init(Context context, DbHelper dbHelper) {
 
+        // Если кэш уже собран, переинициилизировать не нужно
+        if (words != null) return;
+
 //        dbHelper = dbh;
         // Сравниваем версии EXCEL_FILE_VERSION и myDb.file_version.version
         int version = dbHelper.getFileVersion();
@@ -258,15 +261,15 @@ public class Dictionary {
         words.get(engWord).setLastShow(now());
     }
 
-    public static int getEngWordsOfGrayZoneCount(){
+    public static int getEngWordsOfGrayZoneCount() {
         return engWordsOfGrayZone.size();
     }
 
-    public static int getEngWordsOfGreenZoneCount(){
+    public static int getEngWordsOfGreenZoneCount() {
         return engWordsOfGreenZone.size();
     }
 
-    public static int getEngWordsOfWellowOrRedZoneCount(){
+    public static int getEngWordsOfWellowOrRedZoneCount() {
         return engWordsOfYellowOrRedZone.size();
     }
 }
