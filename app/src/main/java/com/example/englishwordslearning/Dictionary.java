@@ -12,7 +12,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,10 +21,8 @@ import java.util.Random;
 import java.util.Set;
 
 import static com.example.englishwordslearning.Constants.GRAY;
-import static com.example.englishwordslearning.Constants.GRAY_BORDER;
 import static com.example.englishwordslearning.Constants.GREEN;
 import static com.example.englishwordslearning.Constants.RED;
-//import static com.example.englishwordslearning.Constants.RED_BORDER;
 import static com.example.englishwordslearning.Constants.YELLOW;
 import static java.time.LocalDateTime.now;
 
@@ -34,19 +31,17 @@ import static java.time.LocalDateTime.now;
  */
 public class Dictionary {
 
-    private static final int EXCEL_FILE_VERSION = 3;
+    private static final int EXCEL_FILE_VERSION = 4;
     private static Map<String, Word> words;
     // Списки слов/выражений на английском (ключи для words)
     private static List<String> engWordsOfGrayZone = new ArrayList<>();
     private static List<String> engWordsOfGreenZone = new ArrayList<>();
     private static List<String> engWordsOfYellowOrRedZone = new ArrayList<>();
-    //    private static List<String> engWordsOfRedZone = new ArrayList<>();
     private static String currentWordColor;
     private static int currentWordIndex;
     // Первые 300 слов должны браться только из серой зоны
     private static int startGrayWordPassed = 0;
     private static final Random RANDOM = new Random();
-    //    private static DbHelper dbHelper;
     public static int GRAY_BORDER = 60;//40% шанс выпадения слова из серой зоны
     public static int YELLOW_RED_BORDER = 5;//55% шанс выпадения слова из желтой или красной зоны
     //5%  шанс выпадения слова из зеленой зоны
@@ -60,7 +55,6 @@ public class Dictionary {
         // Если кэш уже собран, переинициилизировать не нужно
         if (words != null) return;
 
-//        dbHelper = dbh;
         // Сравниваем версии EXCEL_FILE_VERSION и myDb.file_version.version
         int version = dbHelper.getFileVersion();
         if (EXCEL_FILE_VERSION > version) {//если вышла новая сборка
@@ -103,7 +97,6 @@ public class Dictionary {
         //считаем, сколько слов было уже взято из серой зоны
         startGrayWordPassed += engWordsOfGreenZone.size();
         startGrayWordPassed += engWordsOfYellowOrRedZone.size();
-//        startGrayWordPassed += engWordsOfRedZone.size();
     }
 
     /**
@@ -150,7 +143,6 @@ public class Dictionary {
 
             if (excelWords.containsKey(cellEng)) {
                 Log.d(LOG_TAG, "The word \"" + cellEng + "\" is dublicated!");
-                continue;
             } else {
                 excelWords.put(cellEng, new Word(cellEng, cellRus, cellTrans, cellNeedUpdate, cellTags));
             }
@@ -171,8 +163,6 @@ public class Dictionary {
             case YELLOW:
             case RED:
                 return engWordsOfYellowOrRedZone;
-//            case RED:
-//                return engWordsOfRedZone;
             default:
                 throw new RuntimeException("Unknown zone!");
         }
@@ -192,23 +182,14 @@ public class Dictionary {
                 startGrayWordPassed++;
                 Log.d(LOG_TAG, "GRAY zone chosen...");
                 engWord = engWordsOfGrayZone.get(currentWordIndex);
-
                 return checkWordLastShow(engWord);
             }
 
             if (x > YELLOW_RED_BORDER && !engWordsOfYellowOrRedZone.isEmpty()) {
                 currentWordColor = RED;
                 currentWordIndex = RANDOM.nextInt(engWordsOfYellowOrRedZone.size());
-                Log.d(LOG_TAG, "RED zone chosen...");
+                Log.d(LOG_TAG, "YELLOW or RED zone chosen...");
                 engWord = engWordsOfYellowOrRedZone.get(currentWordIndex);
-//                return engWord;
-//            } else if (x > YELLOW_BORDER) {
-//                if (!engWordsOfYellowOrRedZone.isEmpty()) {
-//                    currentWordColor = YELLOW;
-//                    currentWordIndex = RANDOM.nextInt(engWordsOfYellowOrRedZone.size());
-//                    Log.d(LOG_TAG, "YELLOW zone chosen...");
-//                    return engWordsOfYellowOrRedZone.get(currentWordIndex);
-//                }
                 return checkWordLastShow(engWord);
             }
 
@@ -217,7 +198,6 @@ public class Dictionary {
                 currentWordIndex = RANDOM.nextInt(engWordsOfGreenZone.size());
                 Log.d(LOG_TAG, "GREEN zone chosen...");
                 engWord = engWordsOfGreenZone.get(currentWordIndex);
-//                return engWord;
                 return checkWordLastShow(engWord);
             }
         }
@@ -236,6 +216,7 @@ public class Dictionary {
     /**
      * Возвращает перевод слова на русском
      */
+    @SuppressWarnings("ConstantConditions")
     public static String getTranslation(String engWord) {
         return words.get(engWord).getRus();
     }
@@ -243,12 +224,13 @@ public class Dictionary {
     /**
      * Возвращает транскрипцию слова
      */
+    @SuppressWarnings("ConstantConditions")
     public static String getTranscription(String engWord) {
         return words.get(engWord).getTranscription();
     }
 
     /**
-     * Для текущего английского слова (который отображается в данный момент на экране) изменить зону
+     * Для текущего английского слова (отображается в данный момент на экране) изменить зону
      */
     public static void changeCurrentWordZone(String newZone) {
         List<String> currentWordList = getEngWordsList(currentWordColor);

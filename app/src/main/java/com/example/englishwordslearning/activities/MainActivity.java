@@ -1,4 +1,4 @@
-package com.example.englishwordslearning;
+package com.example.englishwordslearning.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.englishwordslearning.DbHelper;
+import com.example.englishwordslearning.Dictionary;
+import com.example.englishwordslearning.R;
 
 import static com.example.englishwordslearning.Constants.GREEN;
 import static com.example.englishwordslearning.Constants.RED;
@@ -16,7 +20,6 @@ import static com.example.englishwordslearning.Constants.YELLOW;
  */
 public class MainActivity extends Activity {
 
-    private boolean isInit = false;
     private TextView engTextView;
     private TextView rusTextView;
     private Button greenBtn;
@@ -36,7 +39,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         this.dbHelper = DbHelper.getInstance(this);
-
         Dictionary.init(this, this.dbHelper);
 
         this.engTextView = findViewById(R.id.tv_engView);
@@ -79,7 +81,6 @@ public class MainActivity extends Activity {
 
         OnClickListener infoBtnClick = x -> {
             Intent infoActivityIntent = new Intent(this, InfoActivity.class);
-//            infoActivityIntent.putExtra(Intent.EXTRA_TEXT, "lalala");
             startActivity(infoActivityIntent);
         };
 

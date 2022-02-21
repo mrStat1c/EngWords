@@ -7,15 +7,6 @@ public class Word {
     private String eng;
     private String rus;
     private String transcription;
-
-    public boolean isNeedUpdate() {
-        return needUpdate;
-    }
-
-    public void setNeedUpdate(boolean needUpdate) {
-        this.needUpdate = needUpdate;
-    }
-
     private boolean needUpdate;
     private String tags;
     private String zone;
@@ -36,6 +27,14 @@ public class Word {
         this.tags = tags;
         this.zone = zone;
         this.lastShow = lastShow;
+    }
+
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
     }
 
     public String getEng() {

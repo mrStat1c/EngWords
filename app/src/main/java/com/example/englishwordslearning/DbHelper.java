@@ -22,13 +22,16 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static DbHelper dbHelper;
 
-    public static DbHelper getInstance(Context context){
-       return dbHelper == null ? new DbHelper(context) : dbHelper;
+    public static DbHelper getInstance(Context context) {
+        if (dbHelper == null) {
+            dbHelper = new DbHelper(context);
+        }
+        return dbHelper;
     }
 
-    private static int DB_VERSION = 2;
-    private static String LOG_TAG = DbHelper.class.getSimpleName();
-    private SQLiteDatabase db;
+    private static final int DB_VERSION = 2;
+    private static final String LOG_TAG = DbHelper.class.getSimpleName();
+    private static SQLiteDatabase db;
 
     private DbHelper(Context context) {
         super(context, "myDb", null, DB_VERSION);
@@ -36,7 +39,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public SQLiteDatabase getDb() {
-        return this.db;
+        return db;
     }
 
     /**
@@ -70,11 +73,11 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Возвращает версию файла, которая хранится в бд
+     * Возвращает версию файла (словаря), которая хранится в бд
      */
     public int getFileVersion() {
         int version = 0;
-        Cursor c = this.db.query("file_version", null, null, null, null, null, null);
+        Cursor c = db.query("file_version", null, null, null, null, null, null);
         if (c.moveToFirst()) {
             version = c.getInt(c.getColumnIndex("version"));
             Log.d(LOG_TAG, "file_version = " + version);
@@ -100,7 +103,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Возвращает Возвращает Map<String, Word> всех слов, имеющихся в бд (ключ - слово на английском, значение - объект Word)
+     * Возвращает Map<String, Word> всех слов, имеющихся в бд (ключ - слово на английском, значение - объект Word)
      */
     public Map<String, Word> getDbWords() {
         Map<String, Word> words = new HashMap<>();
@@ -130,24 +133,7 @@ public class DbHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put("zone", zone);
         contentValues.put("lastShow", lastShow);
-        int updatedRows = this.db.update("dictionary", contentValues, "engWord = ?", new String[]{engWord});
+        int updatedRows = db.update("dictionary", contentValues, "engWord = ?", new String[]{engWord});
         Log.d(LOG_TAG, "EngWord = \"" + engWord + "\", zone = \"" + zone + "\", lastShow = \"" + lastShow + "\". Updated " + updatedRows + " rows.");
     }
-
-//    /**
-//     * Возвращает дату последнего показа слова
-//     */
-//    public int getLastShow(String engWord) {
-//        String lastShow = null;
-//        // todo достаем lastShow для слова
-//        Cursor c = this.db.query("dictionary", null, null, null, null, null, null);
-//        if (c.moveToFirst()) {
-//            version = c.getInt(c.getColumnIndex("version"));
-//            Log.d(LOG_TAG, "file_version = " + version);
-//        } else {
-//            Log.d(LOG_TAG, "Table file_version is empty!");
-//        }
-//        c.close();
-//        return version;
-//    }
 }

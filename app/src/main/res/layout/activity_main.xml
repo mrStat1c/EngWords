@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <TextView
         android:id="@+id/tv_engView"
@@ -41,8 +41,8 @@
 
     <Button
         android:id="@+id/green_btn"
-        android:layout_width="240dp"
-        android:layout_height="65dp"
+        android:layout_width="267dp"
+        android:layout_height="66dp"
         android:backgroundTint="#27AA43"
         android:text="знаю"
         android:textColor="@color/black"
@@ -53,10 +53,9 @@
 
     <Button
         android:id="@+id/yellow_btn"
-        android:layout_width="240dp"
+        android:layout_width="267dp"
         android:layout_height="65dp"
         android:backgroundTint="#F3F325"
-        android:src="@drawable/bbb"
         android:text="нужно повторить"
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@id/red_btn"
@@ -66,10 +65,9 @@
 
     <Button
         android:id="@+id/red_btn"
-        android:layout_width="240dp"
+        android:layout_width="267dp"
         android:layout_height="65dp"
         android:backgroundTint="#A61515"
-        android:src="@drawable/bbb"
         android:text="не знаю"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -81,7 +79,7 @@
         android:id="@+id/info_btn"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:background="@drawable/info5"
+        android:background="@drawable/info_btn"
         app:layout_constraintBottom_toTopOf="@+id/tv_engView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_engView"
