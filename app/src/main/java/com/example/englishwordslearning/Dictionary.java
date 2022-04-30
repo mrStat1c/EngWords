@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,25 +181,25 @@ public class Dictionary {
                 currentWordColor = GRAY;
                 currentWordIndex = RANDOM.nextInt(engWordsOfGrayZone.size());
                 startGrayWordPassed++;
+                engWord = checkWordLastShow(engWordsOfGrayZone.get(currentWordIndex));
                 Log.d(LOG_TAG, "GRAY zone chosen...");
-                engWord = engWordsOfGrayZone.get(currentWordIndex);
-                return checkWordLastShow(engWord);
+                return engWord;
             }
 
             if (x > YELLOW_RED_BORDER && !engWordsOfYellowOrRedZone.isEmpty()) {
                 currentWordColor = RED;
                 currentWordIndex = RANDOM.nextInt(engWordsOfYellowOrRedZone.size());
+                engWord = checkWordLastShow(engWordsOfYellowOrRedZone.get(currentWordIndex));
                 Log.d(LOG_TAG, "YELLOW or RED zone chosen...");
-                engWord = engWordsOfYellowOrRedZone.get(currentWordIndex);
-                return checkWordLastShow(engWord);
+                return engWord;
             }
 
             if (!engWordsOfGreenZone.isEmpty()) {
                 currentWordColor = GREEN;
                 currentWordIndex = RANDOM.nextInt(engWordsOfGreenZone.size());
+                engWord = checkWordLastShow(engWordsOfGreenZone.get(currentWordIndex));
                 Log.d(LOG_TAG, "GREEN zone chosen...");
-                engWord = engWordsOfGreenZone.get(currentWordIndex);
-                return checkWordLastShow(engWord);
+                return engWord;
             }
         }
     }
@@ -206,7 +207,7 @@ public class Dictionary {
     @SuppressWarnings("ConstantConditions")
     private static String checkWordLastShow(String engWord) {
         LocalDateTime lastShow = words.get(engWord).getLastShow();
-        if (lastShow != null && ChronoUnit.HOURS.between(lastShow, now()) < 8) {
+        if (lastShow != null && ChronoUnit.HOURS.between(lastShow, now(ZoneId.of("Europe/Moscow"))) < 8) {
             return getRandomEngWord();
         } else {
             return engWord;
@@ -253,5 +254,9 @@ public class Dictionary {
 
     public static int getEngWordsOfWellowOrRedZoneCount() {
         return engWordsOfYellowOrRedZone.size();
+    }
+
+    public static String getCurrentWordColor(){
+        return currentWordColor;
     }
 }

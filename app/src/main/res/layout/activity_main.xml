@@ -40,6 +40,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/current_word_zone_indicator"
+        android:layout_width="267dp"
+        android:layout_height="5dp"
+        android:text="xxx"
+        app:layout_constraintBottom_toTopOf="@+id/tv_rusView"
+        app:layout_constraintEnd_toEndOf="@+id/tv_engView"
+        app:layout_constraintStart_toStartOf="@+id/tv_engView"
+        app:layout_constraintTop_toBottomOf="@+id/tv_engView" />
+
+    <Button
         android:id="@+id/green_btn"
         android:layout_width="267dp"
         android:layout_height="66dp"

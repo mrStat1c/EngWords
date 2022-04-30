@@ -2,6 +2,7 @@ package com.example.englishwordslearning.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class MainActivity extends Activity {
     private Button yellowBtn;
     private Button redBtn;
     private Button infoBtn;
+    private Button currentWordZoneIndicator;
     private DbHelper dbHelper;
     private final String TRANSCRIPTION_SEPARATOR = "\n------------------\n";
     private final String LOG_TAG = this.getClass().getSimpleName();
@@ -43,6 +45,7 @@ public class MainActivity extends Activity {
 
         this.engTextView = findViewById(R.id.tv_engView);
         this.rusTextView = findViewById(R.id.tv_rusView);
+        this.currentWordZoneIndicator = findViewById(R.id.current_word_zone_indicator);
         presentNewWord();
         this.greenBtn = findViewById(R.id.green_btn);
         this.yellowBtn = findViewById(R.id.yellow_btn);
@@ -93,6 +96,22 @@ public class MainActivity extends Activity {
 
     private void presentNewWord() {
         this.engTextView.setText(Dictionary.getRandomEngWord());
+        this.currentWordZoneIndicator.setBackgroundColor(Color.parseColor(bgColorValue(Dictionary.getCurrentWordColor())));
         this.rusTextView.setText("");
+    }
+
+    private String bgColorValue(String color) {
+        switch (color) {
+            case GREEN: {
+                return "#27AA43";
+            }
+            case RED: {
+                //для красно-желтой зоны
+                return "#FF8C00";
+            }
+            default: {
+                return "#808080";
+            }
+        }
     }
 }
