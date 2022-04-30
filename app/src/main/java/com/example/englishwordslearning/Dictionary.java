@@ -207,7 +207,7 @@ public class Dictionary {
     @SuppressWarnings("ConstantConditions")
     private static String checkWordLastShow(String engWord) {
         LocalDateTime lastShow = words.get(engWord).getLastShow();
-        if (lastShow != null && ChronoUnit.HOURS.between(lastShow, now(ZoneId.of("Europe/Moscow"))) < 8) {
+        if (lastShow != null && ChronoUnit.HOURS.between(lastShow, now()) < 8) {
             return getRandomEngWord();
         } else {
             return engWord;
