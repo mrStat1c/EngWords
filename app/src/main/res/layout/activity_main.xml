@@ -41,7 +41,7 @@
 
     <Button
         android:id="@+id/current_word_zone_indicator"
-        android:layout_width="267dp"
+        android:layout_width="251dp"
         android:layout_height="5dp"
         android:text="xxx"
         app:layout_constraintBottom_toTopOf="@+id/tv_rusView"

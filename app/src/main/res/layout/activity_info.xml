@@ -26,12 +26,13 @@
 
     <Button
         android:id="@+id/back_btn"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:background="@drawable/info_btn"
-        app:layout_constraintBottom_toTopOf="@+id/tv_infoView"
+        android:layout_width="267dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="20dp"
+        android:text="Назад"
+        android:background="@color/green"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_infoView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_infoView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
