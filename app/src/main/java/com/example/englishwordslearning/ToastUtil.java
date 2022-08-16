@@ -1,10 +1,9 @@
-package com.example.englishwordslearning.notImplemented;
+package com.example.englishwordslearning;
 
 import android.content.Context;
 import android.widget.Toast;
 
 /**
- * todo Пока не используется
  * Функционал уведомлений
  */
 public class ToastUtil {

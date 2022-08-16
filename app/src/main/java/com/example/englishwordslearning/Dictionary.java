@@ -65,24 +65,33 @@ public class Dictionary {
             //собираем слова из db
             Set<String> dbWords = dbHelper.getDbEngWords();
 
-            // Добавляем новые слова в db
-            excelWords.entrySet().forEach(entry -> {
-                Word word = entry.getValue();
-                if (!dbWords.contains(entry.getKey())) {
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put("engWord", word.getEng());
-                    contentValues.put("rusWord", word.getRus());
-                    contentValues.put("transcription", word.getTranscription());
-                    contentValues.put("tags", word.getTags());
-                    dbHelper.getDb().insert("dictionary", null, contentValues);
-                } else if (word.isNeedUpdate()) {
-                    // Обновляем необходимые существующие слова
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put("rusWord", word.getRus());
-                    contentValues.put("transcription", word.getTranscription());
-                    contentValues.put("tags", word.getTags());
-                    dbHelper.getDb().update("dictionary", contentValues, "engWord = ?", new String[]{word.getEng()});
+            // Добавляем/обновляем/удаляем слова в db
+            excelWords.forEach((key, word) -> {
+
+                if (word.getUpdateAction() == null) {
+                    // Добавляем новые слова
+                    if (!dbWords.contains(key)) {
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put("engWord", word.getEng());
+                        contentValues.put("rusWord", word.getRus());
+                        contentValues.put("transcription", word.getTranscription());
+                        contentValues.put("tags", word.getTags());
+                        dbHelper.getDb().insert("dictionary", null, contentValues);
+                    }
+                } else {
+                    if (word.getUpdateAction() == Word.UpdateAction.UPDATE) {
+                        // Обновляем существующие слова
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put("rusWord", word.getRus());
+                        contentValues.put("transcription", word.getTranscription());
+                        contentValues.put("tags", word.getTags());
+                        dbHelper.getDb().update("dictionary", contentValues, "engWord = ?", new String[]{word.getEng()});
+                    } else {
+                        // Удаляем существующие слова (если word.getUpdateAction() == Word.UpdateAction.REMOVE)
+                        dbHelper.getDb().delete("dictionary", "engWord = ?", new String[]{word.getEng()});
+                    }
                 }
+
             });
 
             // Обновляем версию файла в бд
@@ -120,7 +129,7 @@ public class Dictionary {
             String cellEng;
             String cellRus;
             String cellTrans;
-            boolean cellNeedUpdate;
+            String cellNeedUpdate;
             String cellTags;
 
             int engColumnIndex = 0;
@@ -138,14 +147,24 @@ public class Dictionary {
                 cellEng = row.getCell(engColumnIndex).getStringCellValue().trim();
                 cellRus = row.getCell(rusColumnIndex).getStringCellValue().trim();
                 cellTrans = row.getCell(transcriptionColumnIndex).getStringCellValue().trim().replace("®", "(r)");
-                cellNeedUpdate = row.getCell(needUpdateColumnIndex) != null;
-                cellTags = row.getCell(tagsColumnIndex) != null ? row.getCell(tagsColumnIndex).getStringCellValue().trim() : null;
+                cellNeedUpdate = row.getCell(needUpdateColumnIndex) != null ?
+                        row.getCell(needUpdateColumnIndex).getStringCellValue().trim() : null;
+                cellTags = row.getCell(tagsColumnIndex) != null ?
+                        row.getCell(tagsColumnIndex).getStringCellValue().trim() : null;
             }
 
             if (excelWords.containsKey(cellEng)) {
                 Log.d(LOG_TAG, "The word \"" + cellEng + "\" is dublicated!");
             } else {
-                excelWords.put(cellEng, new Word(cellEng, cellRus, cellTrans, cellNeedUpdate, cellTags));
+                excelWords.put(cellEng, new Word(
+                        cellEng,
+                        cellRus,
+                        cellTrans,
+                        cellNeedUpdate == null ?
+                                null : Word.UpdateAction.hasValue(cellNeedUpdate) ?
+                                Word.UpdateAction.valueOf(cellNeedUpdate) : null,
+                        cellTags)
+                );
             }
         }
         Log.d(LOG_TAG, "Excel file contains " + excelWords.size() + " words...");
@@ -256,7 +275,19 @@ public class Dictionary {
         return engWordsOfYellowOrRedZone.size();
     }
 
-    public static String getCurrentWordColor(){
+    public static String getCurrentWordColor() {
         return currentWordColor;
+    }
+
+    public static void resetProgress(Context context) {
+        words.clear();
+        engWordsOfGrayZone.clear();
+        engWordsOfGreenZone.clear();
+        engWordsOfYellowOrRedZone.clear();
+        startGrayWordPassed = 0;
+        DbHelper.resetProgress();
+        // собираем кэш (мб можно вынести в отдельную функцию т.к. вызывается 2 раза - здесь и в init)
+        words = DbHelper.getInstance(context).getDbWords();
+        words.values().forEach(word -> getEngWordsList(word.getZone()).add(word.getEng()));
     }
 }

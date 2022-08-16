@@ -117,7 +117,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     c.getString(c.getColumnIndex("transcription")),
                     c.getString(c.getColumnIndex("tags")),
                     c.getString(c.getColumnIndex("zone")),
-                    lastShow == null ? null : LocalDateTime.parse(lastShow)
+                    lastShow == null || lastShow.isEmpty() ? null : LocalDateTime.parse(lastShow)
             );
             words.put(engWord, word);
         }
@@ -135,5 +135,13 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put("lastShow", lastShow);
         int updatedRows = db.update("dictionary", contentValues, "engWord = ?", new String[]{engWord});
         Log.d(LOG_TAG, "EngWord = \"" + engWord + "\", zone = \"" + zone + "\", lastShow = \"" + lastShow + "\". Updated " + updatedRows + " rows.");
+    }
+
+    public static void resetProgress() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("zone", "gray");
+        contentValues.put("lastShow", "");
+        db.update("dictionary", contentValues, null, null);
+        db.delete("file_version", null, null);
     }
 }

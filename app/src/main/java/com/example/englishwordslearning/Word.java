@@ -1,22 +1,40 @@
 package com.example.englishwordslearning;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 public class Word {
 
     private String eng;
     private String rus;
     private String transcription;
-    private boolean needUpdate;
+    private UpdateAction updateAction;
     private String tags;
     private String zone;
     private LocalDateTime lastShow;
 
-    public Word(String eng, String rus, String transcription, boolean needUpdate, String tags) {
+    public enum UpdateAction {
+        UPDATE("u"),
+        REMOVE("r");
+
+        private String symbol;
+
+        UpdateAction(String symbol) {
+            this.symbol = symbol;
+        }
+
+        public static boolean hasValue(String value) {
+            return Arrays.stream(UpdateAction.values())
+                    .anyMatch(element -> element.symbol.equals(value));
+        }
+
+    }
+
+    public Word(String eng, String rus, String transcription, UpdateAction updateAction, String tags) {
         this.eng = eng;
         this.rus = rus;
         this.transcription = transcription;
-        this.needUpdate = needUpdate;
+        this.updateAction = updateAction;
         this.tags = tags;
     }
 
@@ -29,12 +47,12 @@ public class Word {
         this.lastShow = lastShow;
     }
 
-    public boolean isNeedUpdate() {
-        return needUpdate;
+    public UpdateAction getUpdateAction() {
+        return updateAction;
     }
 
-    public void setNeedUpdate(boolean needUpdate) {
-        this.needUpdate = needUpdate;
+    public void setUpdateAction(UpdateAction updateAction) {
+        this.updateAction = updateAction;
     }
 
     public String getEng() {
