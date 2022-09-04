@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
-    tools:context=".activities.InfoActivity">
+    android:background="@drawable/bg_1"
+    tools:context=".activities.StatisticActivity">
 
     <TextView
         android:id="@+id/tv_infoView"
         android:layout_width="267dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="64dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="45dp"
         android:background="@drawable/rounded"
         android:padding="5dp"
         android:text=""
@@ -40,10 +40,63 @@
         android:layout_width="267dp"
         android:layout_height="49dp"
         android:layout_marginTop="20dp"
-        android:background="@color/teal_700"
+        android:background="#D32F2F"
         android:text="СБРОСИТЬ ПРОГРЕСС"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/back_btn" />
+
+    <TextView
+        android:id="@+id/modesLabel"
+        android:layout_width="267dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="- - - Режимы работы - - -"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reset_btn" />
+
+    <Button
+        android:id="@+id/standart_mode_btn"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_width="267dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/teal_700"
+        android:text="СТАНДАРТНЫЙ РЕЖИМ"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/modesLabel" />
+
+    <Button
+        android:id="@+id/leaning_new_mode_btn"
+        android:layout_width="267dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/teal_700"
+        android:text="РЕЖИМ ИЗУЧЕНИЯ НОВОГО"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/standart_mode_btn" />
+
+    <Button
+        android:id="@+id/repetition_mode_btn"
+        android:layout_width="267dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/teal_700"
+        android:text="РЕЖИМ ПОВТОРЕНИЯ"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/leaning_new_mode_btn" />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,8 @@
 package com.example.englishwordslearning.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -26,11 +24,10 @@ public class MainActivity extends Activity {
     private Button greenBtn;
     private Button yellowBtn;
     private Button redBtn;
-    private Button infoBtn;
+    private Button statisticBtn;
     private Button currentWordZoneIndicator;
     private DbHelper dbHelper;
-    private final String TRANSCRIPTION_SEPARATOR = "\n------------------\n";
-    private final String LOG_TAG = this.getClass().getSimpleName();
+    private MainActivityListeners listeners = new MainActivityListeners(this);
 
     /**
      * Инициализирует основной экран. Связывает java объекты с элементами экрана и определяет их работу
@@ -50,64 +47,39 @@ public class MainActivity extends Activity {
         this.greenBtn = findViewById(R.id.green_btn);
         this.yellowBtn = findViewById(R.id.yellow_btn);
         this.redBtn = findViewById(R.id.red_btn);
-        this.infoBtn = findViewById(R.id.info_btn);
+        this.statisticBtn = findViewById(R.id.statistic_btn);
 
-        OnClickListener translateClick = x -> {
-            String engWord = this.engTextView.getText().toString();
-            rusTextView.setText(String.format("%s%s%s",
-                    Dictionary.getTranslation(engWord), TRANSCRIPTION_SEPARATOR, Dictionary.getTranscription(engWord)));
-        };
-
-        OnClickListener greenBtnClick = x -> {
-            String engWord = engTextView.getText().toString();
-            this.dbHelper.updateWord(engWord, GREEN);
-            Dictionary.changeCurrentWordZone(GREEN);
-            Dictionary.updateWordLastShow(engWord);
-            presentNewWord();
-        };
-
-        OnClickListener yellowBtnClick = x -> {
-            String engWord = engTextView.getText().toString();
-            this.dbHelper.updateWord(engWord, YELLOW);
-            Dictionary.changeCurrentWordZone(YELLOW);
-            Dictionary.updateWordLastShow(engWord);
-            presentNewWord();
-        };
-
-        OnClickListener redBtnClick = x -> {
-            String engWord = engTextView.getText().toString();
-            this.dbHelper.updateWord(engWord, RED);
-            Dictionary.changeCurrentWordZone(RED);
-            Dictionary.updateWordLastShow(engWord);
-            presentNewWord();
-        };
-
-        OnClickListener infoBtnClick = x -> {
-            Intent infoActivityIntent = new Intent(this, InfoActivity.class);
-            startActivity(infoActivityIntent);
-        };
-
-        this.rusTextView.setOnClickListener(translateClick);
-        this.greenBtn.setOnClickListener(greenBtnClick);
-        this.yellowBtn.setOnClickListener(yellowBtnClick);
-        this.redBtn.setOnClickListener(redBtnClick);
-        this.infoBtn.setOnClickListener(infoBtnClick);
+        this.rusTextView.setOnClickListener(this.listeners.getTranslateClickListener(this.rusTextView));
+        this.greenBtn.setOnClickListener(this.listeners.getGreenBtnClickListener(this.dbHelper));
+        this.yellowBtn.setOnClickListener(this.listeners.getYellowBtnClickListener(this.dbHelper));
+        this.redBtn.setOnClickListener(this.listeners.getRedBtnClickListener(this.dbHelper));
+        this.statisticBtn.setOnClickListener(this.listeners.getStatisticBtnClickListener());
     }
 
-    private void presentNewWord() {
+    String getEngText() {
+        return this.engTextView.getText().toString();
+    }
+
+    /**
+     * Выводит новое слово на экран
+     */
+    void presentNewWord() {
         this.engTextView.setText(Dictionary.getRandomEngWord());
         this.currentWordZoneIndicator.setBackgroundColor(Color.parseColor(bgColorValue(Dictionary.getCurrentWordColor())));
         this.rusTextView.setText("");
     }
 
+//    todo остановился здесь
     private String bgColorValue(String color) {
         switch (color) {
             case GREEN: {
                 return "#27AA43";
             }
+            case YELLOW: {
+                return "#F3F325";
+            }
             case RED: {
-                //для красно-желтой зоны
-                return "#FF8C00";
+                return "#A61515";
             }
             default: {
                 return "#808080";

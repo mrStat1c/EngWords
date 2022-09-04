@@ -12,7 +12,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.example.englishwordslearning.Constants.GRAY;
 import static com.example.englishwordslearning.Constants.GREEN;
@@ -27,26 +27,28 @@ import static com.example.englishwordslearning.Constants.RED;
 import static com.example.englishwordslearning.Constants.YELLOW;
 import static java.time.LocalDateTime.now;
 
+import com.example.englishwordslearning.modes.StandartMode;
+import com.example.englishwordslearning.modes.Mode;
+
 /**
  * Инициализирует данные словаря, синхронизируя данные в файле и в бд, и управляет ими
  */
 public class Dictionary {
 
     private static final int EXCEL_FILE_VERSION = 4;
+    private static Mode mode = new StandartMode();
     private static Map<String, Word> words;
     // Списки слов/выражений на английском (ключи для words)
     private static List<String> engWordsOfGrayZone = new ArrayList<>();
     private static List<String> engWordsOfGreenZone = new ArrayList<>();
-    private static List<String> engWordsOfYellowOrRedZone = new ArrayList<>();
-    private static String currentWordColor;
-    private static int currentWordIndex;
+    private static List<String> engWordsOfYellowZone = new ArrayList<>();
+    private static List<String> engWordsOfRedZone = new ArrayList<>();
+    public static String currentWordColor;
+    public static int currentWordIndex;
     // Первые 300 слов должны браться только из серой зоны
-    private static int startGrayWordPassed = 0;
-    private static final Random RANDOM = new Random();
-    public static int GRAY_BORDER = 60;//40% шанс выпадения слова из серой зоны
-    public static int YELLOW_RED_BORDER = 5;//55% шанс выпадения слова из желтой или красной зоны
-    //5%  шанс выпадения слова из зеленой зоны
-    private static final String LOG_TAG = Dictionary.class.getSimpleName();
+    public static int startGrayWordPassed = 0;
+    public static final Random RANDOM = new Random();
+    public static final String LOG_TAG = Dictionary.class.getSimpleName();
 
     /**
      * Инициализирует данные словаря, синхронизируя данные в файле и в бд
@@ -106,7 +108,8 @@ public class Dictionary {
 
         //считаем, сколько слов было уже взято из серой зоны
         startGrayWordPassed += engWordsOfGreenZone.size();
-        startGrayWordPassed += engWordsOfYellowOrRedZone.size();
+        startGrayWordPassed += engWordsOfRedZone.size();
+        startGrayWordPassed += engWordsOfYellowZone.size();
     }
 
     /**
@@ -181,56 +184,29 @@ public class Dictionary {
             case GREEN:
                 return engWordsOfGreenZone;
             case YELLOW:
+                return engWordsOfYellowZone;
             case RED:
-                return engWordsOfYellowOrRedZone;
+                return engWordsOfRedZone;
             default:
                 throw new RuntimeException("Unknown zone!");
         }
     }
 
-    /**
-     * Возвращает случайное английское слово, используя для разных зон разные вероятности
-     */
+    public static void changeMode(Mode mode) {
+        Dictionary.mode = mode;
+    }
+
+    public static Mode getMode(){
+        return mode;
+    }
+
     public static String getRandomEngWord() {
-        String engWord;
-        while (true) {
-            int x = RANDOM.nextInt(100) + 1;//[1-100]
-
-            if (!engWordsOfGrayZone.isEmpty() && (x > GRAY_BORDER || startGrayWordPassed <= 300)) {
-                currentWordColor = GRAY;
-                currentWordIndex = RANDOM.nextInt(engWordsOfGrayZone.size());
-                startGrayWordPassed++;
-                engWord = checkWordLastShow(engWordsOfGrayZone.get(currentWordIndex));
-                Log.d(LOG_TAG, "GRAY zone chosen...");
-                return engWord;
-            }
-
-            if (x > YELLOW_RED_BORDER && !engWordsOfYellowOrRedZone.isEmpty()) {
-                currentWordColor = RED;
-                currentWordIndex = RANDOM.nextInt(engWordsOfYellowOrRedZone.size());
-                engWord = checkWordLastShow(engWordsOfYellowOrRedZone.get(currentWordIndex));
-                Log.d(LOG_TAG, "YELLOW or RED zone chosen...");
-                return engWord;
-            }
-
-            if (!engWordsOfGreenZone.isEmpty()) {
-                currentWordColor = GREEN;
-                currentWordIndex = RANDOM.nextInt(engWordsOfGreenZone.size());
-                engWord = checkWordLastShow(engWordsOfGreenZone.get(currentWordIndex));
-                Log.d(LOG_TAG, "GREEN zone chosen...");
-                return engWord;
-            }
-        }
+        return mode.getRandomEngWord();
     }
 
     @SuppressWarnings("ConstantConditions")
-    private static String checkWordLastShow(String engWord) {
-        LocalDateTime lastShow = words.get(engWord).getLastShow();
-        if (lastShow != null && ChronoUnit.HOURS.between(lastShow, now()) < 8) {
-            return getRandomEngWord();
-        } else {
-            return engWord;
-        }
+    public static String checkWordLastShow(String engWord) {
+       return availableWord(engWord) ? mode.getRandomEngWord(): engWord;
     }
 
     /**
@@ -263,31 +239,65 @@ public class Dictionary {
         words.get(engWord).setLastShow(now());
     }
 
+    public static List<String> getEngWordsOfGrayZone() {
+        return engWordsOfGrayZone;
+    }
+
     public static int getEngWordsOfGrayZoneCount() {
         return engWordsOfGrayZone.size();
+    }
+
+    public static List<String> getEngWordsOfGreenZone() {
+        return engWordsOfGreenZone;
     }
 
     public static int getEngWordsOfGreenZoneCount() {
         return engWordsOfGreenZone.size();
     }
 
-    public static int getEngWordsOfWellowOrRedZoneCount() {
-        return engWordsOfYellowOrRedZone.size();
+    public static List<String> getEngWordsOfYellowZone() {
+        return engWordsOfYellowZone;
+    }
+
+    public static int getEngWordsOfYellowZoneCount() {
+        return engWordsOfYellowZone.size();
+    }
+
+    public static List<String> getEngWordsOfRedZone() {
+        return engWordsOfRedZone;
+    }
+
+    public static int getEngWordsOfRedZoneCount() {
+        return engWordsOfRedZone.size();
     }
 
     public static String getCurrentWordColor() {
         return currentWordColor;
     }
 
+    public static boolean first300WordsDistributed(){
+        return startGrayWordPassed > 300;
+    }
+
     public static void resetProgress(Context context) {
         words.clear();
         engWordsOfGrayZone.clear();
         engWordsOfGreenZone.clear();
-        engWordsOfYellowOrRedZone.clear();
+        engWordsOfYellowZone.clear();
+        engWordsOfRedZone.clear();
         startGrayWordPassed = 0;
         DbHelper.resetProgress();
         // собираем кэш (мб можно вынести в отдельную функцию т.к. вызывается 2 раза - здесь и в init)
         words = DbHelper.getInstance(context).getDbWords();
         words.values().forEach(word -> getEngWordsList(word.getZone()).add(word.getEng()));
+    }
+
+    public static List<String> availableWordList(List<String> list){
+        return list.stream().filter(Dictionary::availableWord).collect(Collectors.toList());
+    }
+    
+    private static boolean availableWord(String engWord){
+        LocalDateTime lastShow = words.get(engWord).getLastShow();
+        return lastShow != null && ChronoUnit.HOURS.between(lastShow, now()) < 8;
     }
 }

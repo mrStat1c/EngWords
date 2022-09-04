@@ -24,7 +24,7 @@
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
 <!--            </intent-filter>-->
         </activity>
-        <activity android:name=".activities.InfoActivity" android:screenOrientation="portrait">
+        <activity android:name=".activities.StatisticActivity" android:screenOrientation="portrait">
         </activity>
     </application>
 

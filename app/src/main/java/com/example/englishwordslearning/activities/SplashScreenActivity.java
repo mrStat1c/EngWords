@@ -7,9 +7,11 @@ import android.os.Handler;
 
 import com.example.englishwordslearning.R;
 
+/**
+ * Отвечает за работу экрана запуска приложения
+ */
 public class SplashScreenActivity extends Activity {
-    // Время в милесекундах, в течение которого будет отображаться Splash Screen
-    private final int SPLASH_DISPLAY_LENGTH = 3000;
+    private final int SPLASH_DISPLAY_DURATION = 3000;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -17,10 +19,10 @@ public class SplashScreenActivity extends Activity {
         setContentView(R.layout.activity_splash);
 
         new Handler().postDelayed(() -> {
-            // По истечении времени, запускаем главный активити, а Splash Screen закрываем
-            Intent mainIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
-            SplashScreenActivity.this.startActivity(mainIntent);
+            // По истечении времени запускаем основной экран, а Splash Screen закрываем
+            Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+            SplashScreenActivity.this.startActivity(intent);
             SplashScreenActivity.this.finish();
-        }, SPLASH_DISPLAY_LENGTH);
+        }, SPLASH_DISPLAY_DURATION);
     }
 }
