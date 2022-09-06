@@ -3,6 +3,9 @@ package com.example.englishwordslearning;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+/**
+ * Инкапсулирует слово
+ */
 public class Word {
 
     private String eng;

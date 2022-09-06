@@ -29,7 +29,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return dbHelper;
     }
 
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 0;
     private static final String LOG_TAG = DbHelper.class.getSimpleName();
     private static SQLiteDatabase db;
 
@@ -69,7 +69,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        //при необходимости добавить логику обновления бд
     }
 
     /**
@@ -137,6 +137,9 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d(LOG_TAG, "EngWord = \"" + engWord + "\", zone = \"" + zone + "\", lastShow = \"" + lastShow + "\". Updated " + updatedRows + " rows.");
     }
 
+    /**
+     * Сбрасывает прогресс всех слов в бд (сбрасывает зону на серую, удаляет время последнего показа)
+     */
     public static void resetProgress() {
         ContentValues contentValues = new ContentValues();
         contentValues.put("zone", "gray");

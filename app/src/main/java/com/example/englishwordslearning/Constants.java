@@ -15,5 +15,4 @@ public class Constants {
         public static final String HOW_TO_RESET_PROGRESS = "Чтобы сбросить прогресс, удерживайте более 3 секунд";
         public static final String MODE_NOT_AVAILABLE = "До распределения первых 300 слов доступен только стандартный режим";
     }
-
 }

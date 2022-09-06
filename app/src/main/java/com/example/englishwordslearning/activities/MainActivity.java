@@ -1,7 +1,6 @@
 package com.example.englishwordslearning.activities;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,9 +9,7 @@ import com.example.englishwordslearning.DbHelper;
 import com.example.englishwordslearning.Dictionary;
 import com.example.englishwordslearning.R;
 
-import static com.example.englishwordslearning.Constants.GREEN;
-import static com.example.englishwordslearning.Constants.RED;
-import static com.example.englishwordslearning.Constants.YELLOW;
+import static com.example.englishwordslearning.utils.ColorUtil.currentColorIntValue;
 
 /**
  * Отвечает за работу основного экрана приложения
@@ -65,25 +62,7 @@ public class MainActivity extends Activity {
      */
     void presentNewWord() {
         this.engTextView.setText(Dictionary.getRandomEngWord());
-        this.currentWordZoneIndicator.setBackgroundColor(Color.parseColor(bgColorValue(Dictionary.getCurrentWordColor())));
+        this.currentWordZoneIndicator.setBackgroundColor(currentColorIntValue());
         this.rusTextView.setText("");
-    }
-
-//    todo остановился здесь
-    private String bgColorValue(String color) {
-        switch (color) {
-            case GREEN: {
-                return "#27AA43";
-            }
-            case YELLOW: {
-                return "#F3F325";
-            }
-            case RED: {
-                return "#A61515";
-            }
-            default: {
-                return "#808080";
-            }
-        }
     }
 }

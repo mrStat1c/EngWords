@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.englishwordslearning.Dictionary;
-import com.example.englishwordslearning.ToastUtil;
+import com.example.englishwordslearning.utils.ToastUtil;
 import com.example.englishwordslearning.modes.LearningNewMode;
 import com.example.englishwordslearning.modes.RepetitionMode;
 import com.example.englishwordslearning.modes.StandartMode;

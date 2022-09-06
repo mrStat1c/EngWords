@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,13 +28,14 @@ import static java.time.LocalDateTime.now;
 
 import com.example.englishwordslearning.modes.StandartMode;
 import com.example.englishwordslearning.modes.Mode;
+import com.example.englishwordslearning.utils.RandomUtil;
 
 /**
  * Инициализирует данные словаря, синхронизируя данные в файле и в бд, и управляет ими
  */
 public class Dictionary {
 
-    private static final int EXCEL_FILE_VERSION = 4;
+    private static final int EXCEL_FILE_VERSION = 1;
     private static Mode mode = new StandartMode();
     private static Map<String, Word> words;
     // Списки слов/выражений на английском (ключи для words)
@@ -47,7 +47,6 @@ public class Dictionary {
     public static int currentWordIndex;
     // Первые 300 слов должны браться только из серой зоны
     public static int startGrayWordPassed = 0;
-    public static final Random RANDOM = new Random();
     public static final String LOG_TAG = Dictionary.class.getSimpleName();
 
     /**
@@ -196,7 +195,7 @@ public class Dictionary {
         Dictionary.mode = mode;
     }
 
-    public static Mode getMode(){
+    public static Mode getMode() {
         return mode;
     }
 
@@ -204,9 +203,15 @@ public class Dictionary {
         return mode.getRandomEngWord();
     }
 
+    /**
+     * Если проверяемое слово доступно для показа (проверка availableWord()), возвращается данное слово,
+     * если нет, то генерируется другое случайное слово.
+     *
+     * @param engWord проверяемое слово
+     */
     @SuppressWarnings("ConstantConditions")
     public static String checkWordLastShow(String engWord) {
-       return availableWord(engWord) ? mode.getRandomEngWord(): engWord;
+        return availableWord(engWord) ? engWord : mode.getRandomEngWord();
     }
 
     /**
@@ -226,7 +231,7 @@ public class Dictionary {
     }
 
     /**
-     * Для текущего английского слова (отображается в данный момент на экране) изменить зону
+     * Для текущего английского слова (отображается в данный момент на экране) изменяет зону
      */
     public static void changeCurrentWordZone(String newZone) {
         List<String> currentWordList = getEngWordsList(currentWordColor);
@@ -234,6 +239,9 @@ public class Dictionary {
         newWordList.add(currentWordList.remove(currentWordIndex));
     }
 
+    /**
+     * @param engWord Обновляет дату последнего показа слова в кэше
+     */
     @SuppressWarnings("ConstantConditions")
     public static void updateWordLastShow(String engWord) {
         words.get(engWord).setLastShow(now());
@@ -275,10 +283,18 @@ public class Dictionary {
         return currentWordColor;
     }
 
-    public static boolean first300WordsDistributed(){
+    /**
+     * @return Были ли распределены первые 300 слов из серой зоны
+     */
+    public static boolean first300WordsDistributed() {
         return startGrayWordPassed > 300;
     }
 
+    /**
+     * Сбрасывает прогресс словаря (очищает все списки слов, обнуляет счетчик распределения серых слов, пересобирается кэш
+     *
+     * @param context контекст
+     */
     public static void resetProgress(Context context) {
         words.clear();
         engWordsOfGrayZone.clear();
@@ -287,17 +303,40 @@ public class Dictionary {
         engWordsOfRedZone.clear();
         startGrayWordPassed = 0;
         DbHelper.resetProgress();
-        // собираем кэш (мб можно вынести в отдельную функцию т.к. вызывается 2 раза - здесь и в init)
         words = DbHelper.getInstance(context).getDbWords();
         words.values().forEach(word -> getEngWordsList(word.getZone()).add(word.getEng()));
     }
 
-    public static List<String> availableWordList(List<String> list){
+    /**
+     * Из списка слов создает новый список, содержащий только доступные для показа слова
+     */
+    public static List<String> availableWordList(List<String> list) {
         return list.stream().filter(Dictionary::availableWord).collect(Collectors.toList());
     }
-    
-    private static boolean availableWord(String engWord){
+
+    /**
+     * Вычисляет, доступно ли для показа текущее слово.
+     * Если прошло более 8 часов со времени последнего показа, то доступно. Иначе не доступно.
+     *
+     * @param engWord текущее слово
+     */
+    private static boolean availableWord(String engWord) {
         LocalDateTime lastShow = words.get(engWord).getLastShow();
-        return lastShow != null && ChronoUnit.HOURS.between(lastShow, now()) < 8;
+        return lastShow == null || ChronoUnit.HOURS.between(lastShow, now()) > 8;
+    }
+
+    /**
+     * Устанавливает параметры новой зоны (выбранный цвет и индекс слова)
+     */
+    public static String chooseWordZone(String zoneColor) {
+        List<String> engWordList = getEngWordsList(zoneColor);
+        currentWordColor = zoneColor;
+        currentWordIndex = RandomUtil.randomListIndex(engWordList.size());
+        if (zoneColor.equals(GRAY)) {
+            startGrayWordPassed++;
+        }
+        String engWord = checkWordLastShow(engWordList.get(currentWordIndex));
+        Log.d(LOG_TAG, zoneColor + " zone chosen...");
+        return engWord;
     }
 }
