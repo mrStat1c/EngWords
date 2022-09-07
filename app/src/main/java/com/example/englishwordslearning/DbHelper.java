@@ -29,7 +29,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return dbHelper;
     }
 
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 1;
     private static final String LOG_TAG = DbHelper.class.getSimpleName();
     private static SQLiteDatabase db;
 
