@@ -30,7 +30,7 @@ public class StatisticActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info);
+        setContentView(R.layout.activity_stats);
 
         this.backBtn = findViewById(R.id.back_btn);
         this.resetBtn = findViewById(R.id.reset_btn);
