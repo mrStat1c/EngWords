@@ -51,7 +51,7 @@ public class StatisticActivity extends Activity {
     /**
      * Заполняет информационное окно данными
      */
-     void fillStatistic() {
+    void fillStatistic() {
         int greenWordsCount = Dictionary.getEngWordsOfGreenZoneCount();
         int yellowAndRedWordsCount = Dictionary.getEngWordsOfYellowZoneCount() + Dictionary.getEngWordsOfRedZoneCount();
         int grayWordsCount = Dictionary.getEngWordsOfGrayZoneCount();
@@ -70,13 +70,10 @@ public class StatisticActivity extends Activity {
                         "------------------\n" +
                         "Версия приложения: %s",
                 Dictionary.getMode().getName(),
-                Dictionary.getEngWordsOfGrayZoneCount()
-                        + Dictionary.getEngWordsOfGreenZoneCount()
-                        + Dictionary.getEngWordsOfYellowZoneCount()
-                        + Dictionary.getEngWordsOfRedZoneCount(),
-                Dictionary.getEngWordsOfGreenZoneCount(), greenWordsProportion,
-                Dictionary.getEngWordsOfYellowZoneCount(), yellowAndRedWordsProportion,
-                Dictionary.getEngWordsOfGrayZoneCount(), grayWordsProportion,
+                allWordsCount,
+                greenWordsCount, greenWordsProportion,
+                yellowAndRedWordsCount, yellowAndRedWordsProportion,
+                grayWordsCount, grayWordsProportion,
                 BuildConfig.VERSION_NAME
         );
         this.infoView.setText(s1);
