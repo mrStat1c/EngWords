@@ -35,7 +35,7 @@ import com.example.englishwordslearning.utils.RandomUtil;
  */
 public class Dictionary {
 
-    private static final int EXCEL_FILE_VERSION = 1;
+    private static final int EXCEL_FILE_VERSION = 2;
     private static Mode mode = new StandartMode();
     private static Map<String, Word> words;
     // Списки слов/выражений на английском (ключи для words)
@@ -164,7 +164,7 @@ public class Dictionary {
                         cellTrans,
                         cellNeedUpdate == null ?
                                 null : Word.UpdateAction.hasValue(cellNeedUpdate) ?
-                                Word.UpdateAction.valueOf(cellNeedUpdate) : null,
+                                Word.UpdateAction.getByValue(cellNeedUpdate) : null,
                         cellTags)
                 );
             }

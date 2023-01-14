@@ -31,6 +31,13 @@ public class Word {
                     .anyMatch(element -> element.symbol.equals(value));
         }
 
+        public static UpdateAction getByValue(String value) {
+            return Arrays.stream(UpdateAction.values())
+                    .filter(element -> element.symbol.equals(value))
+                    .findFirst()
+                    .orElse(null);
+        }
+
     }
 
     public Word(String eng, String rus, String transcription, UpdateAction updateAction, String tags) {
