@@ -29,7 +29,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return dbHelper;
     }
 
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     private static final String LOG_TAG = DbHelper.class.getSimpleName();
     private static SQLiteDatabase db;
 
@@ -80,11 +80,11 @@ public class DbHelper extends SQLiteOpenHelper {
         Cursor c = db.query("file_version", null, null, null, null, null, null);
         if (c.moveToFirst()) {
             version = c.getInt(c.getColumnIndex("version"));
-            Log.d(LOG_TAG, "file_version = " + version);
+            c.close();
         } else {
-            Log.d(LOG_TAG, "Table file_version is empty!");
+            db.execSQL("INSERT INTO file_version (version) VALUES (0);");
         }
-        c.close();
+        Log.d(LOG_TAG, "file_version = " + version);
         return version;
     }
 
@@ -126,15 +126,36 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Обновляет зону и дату последнего показа для слова в бд
+     * Обновляет зону, дату последнего показа и счетчик красной зоны для слова в бд
      */
     public void updateWord(String engWord, String zone) {
         String lastShow = String.valueOf(now());
         ContentValues contentValues = new ContentValues();
         contentValues.put("zone", zone);
         contentValues.put("lastShow", lastShow);
+        // на данный момент колонка tags используется только для хранения redCounter
+        // при добавлении других параметров в данную колонку, логику нужно будет переделать
+        int redCounter;
+        if (zone.equals(Constants.RED)) {
+            redCounter = getRedCounter(engWord);
+            redCounter++;
+        } else {
+            redCounter = 0;
+        }
+        contentValues.put("tags", String.valueOf(redCounter));
         int updatedRows = db.update("dictionary", contentValues, "engWord = ?", new String[]{engWord});
         Log.d(LOG_TAG, "EngWord = \"" + engWord + "\", zone = \"" + zone + "\", lastShow = \"" + lastShow + "\". Updated " + updatedRows + " rows.");
+    }
+
+    /**
+     * @return Возвращает значение счетчика красной зоны для слова
+     */
+    private static int getRedCounter(String engWord) {
+        Cursor c = db.query("dictionary", null, "engWord = ?", new String[]{engWord}, null, null, null);
+        c.moveToNext();
+        String redCounter = c.getString(c.getColumnIndex("tags"));
+        c.close();
+        return redCounter == null || redCounter.isEmpty() ? 0 : Integer.parseInt(redCounter);
     }
 
     /**

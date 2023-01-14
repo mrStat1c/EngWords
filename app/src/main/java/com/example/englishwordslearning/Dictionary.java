@@ -231,6 +231,15 @@ public class Dictionary {
     }
 
     /**
+     * Возвращает счетчик красной зоны слова
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static int getRedCounter(String engWord) {
+        String tags = words.get(engWord).getTags();
+        return tags == null || tags.isEmpty() ? 0 : Integer.parseInt(tags);
+    }
+
+    /**
      * Для текущего английского слова (отображается в данный момент на экране) изменяет зону
      */
     public static void changeCurrentWordZone(String newZone) {
@@ -240,11 +249,29 @@ public class Dictionary {
     }
 
     /**
-     * @param engWord Обновляет дату последнего показа слова в кэше
+     * Обновляет дату последнего показа слова в кэше
      */
     @SuppressWarnings("ConstantConditions")
     public static void updateWordLastShow(String engWord) {
         words.get(engWord).setLastShow(now());
+    }
+
+    /**
+     * Инкрементирует значение счетчика красной зоны для текущего слова
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static void incrementRedCounter(String engWord) {
+        int redCounter = getRedCounter(engWord);
+        redCounter++;
+        words.get(engWord).setTags(String.valueOf(redCounter));
+    }
+
+    /**
+     * Сбрасывает значение счетчика красной зоны на 0 для текущего слова
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static void resetRedCounter(String engWord) {
+        words.get(engWord).setTags(String.valueOf(0));
     }
 
     public static List<String> getEngWordsOfGrayZone() {
@@ -338,5 +365,14 @@ public class Dictionary {
         String engWord = checkWordLastShow(engWordList.get(currentWordIndex));
         Log.d(LOG_TAG, zoneColor + " zone chosen...");
         return engWord;
+    }
+
+    /**
+     * Представляет ли сложность в изучении слово из красной зоны
+     * true если слово из красной зоны и оно было добавлено в красную зону более 3 раз подряд
+     * @param engWord текущее слово
+     */
+    public static boolean difficultWord(String engWord) {
+        return currentWordColor.equals(Constants.RED) && getRedCounter(engWord) > 3;
     }
 }

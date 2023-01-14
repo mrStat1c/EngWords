@@ -95,4 +95,17 @@
         app:layout_constraintStart_toEndOf="@+id/tv_engView"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/red_cnt_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="#BC1111"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_rusView"
+        app:layout_constraintEnd_toEndOf="@+id/statistic_btn"
+        app:layout_constraintStart_toEndOf="@+id/current_word_zone_indicator"
+        app:layout_constraintTop_toBottomOf="@+id/tv_engView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

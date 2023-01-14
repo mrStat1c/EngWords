@@ -44,6 +44,7 @@ public class MainActivityListeners {
             dbHelper.updateWord(engWord, GREEN);
             Dictionary.changeCurrentWordZone(GREEN);
             Dictionary.updateWordLastShow(engWord);
+            Dictionary.resetRedCounter(engWord);
             this.activity.presentNewWord();
         };
     }
@@ -57,6 +58,7 @@ public class MainActivityListeners {
             dbHelper.updateWord(engWord, YELLOW);
             Dictionary.changeCurrentWordZone(YELLOW);
             Dictionary.updateWordLastShow(engWord);
+            Dictionary.resetRedCounter(engWord);
             this.activity.presentNewWord();
         };
     }
@@ -70,6 +72,7 @@ public class MainActivityListeners {
             dbHelper.updateWord(engWord, RED);
             Dictionary.changeCurrentWordZone(RED);
             Dictionary.updateWordLastShow(engWord);
+            Dictionary.incrementRedCounter(engWord);
             this.activity.presentNewWord();
         };
     }

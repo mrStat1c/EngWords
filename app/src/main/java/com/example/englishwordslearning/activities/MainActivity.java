@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
     private Button redBtn;
     private Button statisticBtn;
     private Button currentWordZoneIndicator;
+    private TextView redCounterTextView;
     private DbHelper dbHelper;
     private MainActivityListeners listeners = new MainActivityListeners(this);
 
@@ -40,6 +41,7 @@ public class MainActivity extends Activity {
         this.engTextView = findViewById(R.id.tv_engView);
         this.rusTextView = findViewById(R.id.tv_rusView);
         this.currentWordZoneIndicator = findViewById(R.id.current_word_zone_indicator);
+        this.redCounterTextView = findViewById(R.id.red_cnt_view);
         presentNewWord();
         this.greenBtn = findViewById(R.id.green_btn);
         this.yellowBtn = findViewById(R.id.yellow_btn);
@@ -64,5 +66,7 @@ public class MainActivity extends Activity {
         this.engTextView.setText(Dictionary.getRandomEngWord());
         this.currentWordZoneIndicator.setBackgroundColor(currentColorIntValue());
         this.rusTextView.setText("");
+        this.redCounterTextView.setText(Dictionary.difficultWord(getEngText()) ?
+                Dictionary.getRedCounter(getEngText()) + "!" : "");
     }
 }
