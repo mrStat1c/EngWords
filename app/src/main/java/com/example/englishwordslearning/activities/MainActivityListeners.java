@@ -41,8 +41,9 @@ public class MainActivityListeners {
     View.OnClickListener getGreenBtnClickListener(DbHelper dbHelper) {
         return x -> {
             String engWord = this.activity.getEngText();
-            dbHelper.updateWord(engWord, GREEN);
-            Dictionary.changeCurrentWordZone(GREEN);
+            String newColor = Dictionary.currentWordColor.equals(RED) ? YELLOW : GREEN;
+            dbHelper.updateWord(engWord, newColor);
+            Dictionary.changeCurrentWordZone(newColor);
             Dictionary.updateWordLastShow(engWord);
             Dictionary.resetRedCounter(engWord);
             this.activity.presentNewWord();

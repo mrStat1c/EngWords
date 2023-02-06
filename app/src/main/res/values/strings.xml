@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Simple English</string>
-    <string name="greenBtnText">знаю</string>
-    <string name="yellowBtnText">нужно повторить</string>
-    <string name="redBtnText">не знаю</string>
+    <string name="greenBtnText">I know</string>
+    <string name="yellowBtnText">Need repeat</string>
+    <string name="redBtnText">I don\'t know</string>
     <string name="splash_activity_text">SIMPLE ENGLISH</string>
     <string name="backBtnText">Назад</string>
     <string name="resetProgressBtnText">СБРОСИТЬ ПРОГРЕСС</string>

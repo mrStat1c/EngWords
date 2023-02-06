@@ -52,7 +52,7 @@
     <Button
         android:id="@+id/green_btn"
         android:layout_width="267dp"
-        android:layout_height="66dp"
+        android:layout_height="65dp"
         android:backgroundTint="#27AA43"
         android:text="@string/greenBtnText"
         android:textColor="@color/black"
@@ -89,7 +89,7 @@
         android:id="@+id/statistic_btn"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:background="@drawable/gearwheel"
+        android:background="@drawable/lamp"
         app:layout_constraintBottom_toTopOf="@+id/tv_engView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_engView"
