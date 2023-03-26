@@ -35,7 +35,7 @@ import com.example.englishwordslearning.utils.RandomUtil;
  */
 public class Dictionary {
 
-    private static final int EXCEL_FILE_VERSION = 3;
+    private static final int EXCEL_FILE_VERSION = 4;
     private static Mode mode = new StandartMode();
     private static Map<String, Word> words;
     // Списки слов/выражений на английском (ключи для words)
